@@ -1,10 +1,11 @@
 package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
 
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Iterator;
 
-public abstract class TaskList implements Iterable<Task>{
+public abstract class TaskList implements Iterable<Task>, Serializable {
 
     public abstract void add(Task task);
 

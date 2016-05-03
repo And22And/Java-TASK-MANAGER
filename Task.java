@@ -1,9 +1,10 @@
 package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
 
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Task{
+public class Task implements Serializable{
 
     private String text;
     private Date start;

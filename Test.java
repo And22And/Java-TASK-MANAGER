@@ -1,5 +1,11 @@
 package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
 
+import java.awt.*;
+import java.io.DataInput;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Test {
@@ -36,7 +42,8 @@ public class Test {
         Iterator<Task> iter = list.iterator();
         for(Task t : arr){
             System.out.println(t.toString());
-        }*/
+        }
+
         SortedMap<Date, Set<Task>> l2 = Tasks.calendar(l1, a, b);
         for(Map.Entry<Date,  Set<Task>> dat : l2.entrySet()) {
 
@@ -44,6 +51,10 @@ public class Test {
             for (Task t: dat.getValue()) {
                 System.out.println(t);
             }
-        }
+        }*/
+        SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.mmm]");
+        Date d1 = new Date();
+        Font myFont = new Font("TimesRoman", Font.BOLD,   30);
+        System.out.println(format.format(d1));
     }
 }
