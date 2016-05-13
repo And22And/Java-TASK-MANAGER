@@ -1,6 +1,8 @@
 package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
 
 
+import java.util.Arrays;
+
 public class ArrayTaskList extends TaskList{
 
     private Task tasks[];
@@ -53,6 +55,8 @@ public class ArrayTaskList extends TaskList{
 
     @Override
     public String toString() {
-        return "ArrayTaskList { contain " + this.size() + " Tasks} ";
+        return "ArrayTaskList{" +
+                "tasks=" + Arrays.toString(tasks) +
+                '}';
     }
 }
