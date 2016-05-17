@@ -1,7 +1,5 @@
 package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
 
-
-import java.awt.*;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,6 +29,13 @@ public class TaskIO {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void write(TaskList tasks, Writer out) { //– записує задачі зі списку у потік в текстовому    форматі, описаному нижче.
@@ -44,6 +49,7 @@ public class TaskIO {
                     out.write(" to " + format.format(t.getEndTime().getTime()));
                     out.write(" every " + intToTime(t.getRepeatInterval()));
                 } else {
+                    out.write(" at ");
                     out.write(format.format(t.getStartTime().getTime()));
                 }
                 if(!t.isActive()) out.write(" inactive");
@@ -53,6 +59,13 @@ public class TaskIO {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -90,6 +103,13 @@ public class TaskIO {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public static void read(TaskList tasks, Reader in) { //  – зчитує задачі із потоку у список.
@@ -99,7 +119,8 @@ public class TaskIO {
             String str;
             do {
                 str = reader.readLine();
-                String title = str.substring(str.indexOf('\"'), str.lastIndexOf('\"')+1);
+                String title = str.substring(str.indexOf('\"')+1, str.lastIndexOf('\"'));
+                title = title.replace("\"\"", "\"");
                 str = str.substring(str.lastIndexOf('\"'));
                 if(str.contains("at")) {
                     Date d1 = format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1));
@@ -124,6 +145,13 @@ public class TaskIO {
             } while(str.charAt(str.length() - 1) != '.');
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -155,8 +183,7 @@ public class TaskIO {
 
     public static void writeText(TaskList tasks, File file) {  //– записує задачі у файл у текстовому форматі
         try{
-            FileWriter out = new FileWriter("E:\\Program\\Java\\JavaPractice\\src\\ua\\edu\\sumdu\\j2se\\AndriySliahetskiy\\tasks\\Text.txt", false);
-            write(tasks, out);
+            write(tasks, new FileWriter(file));
            /* SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.mmm]");
             for(int i = 0; i < tasks.size(); i++) {
                 Task t = tasks.getTask(i);
@@ -257,19 +284,22 @@ public class TaskIO {
         int minutes = seconds/60;
         seconds %= 60;
         if(days != 0) {
-            time += days + "day";
+            time += days + " day";
             if(days > 1) time += 's';
+            time += " ";
         }
         if(hours != 0) {
-            time += hours + "hour";
+            time += hours + " hour";
             if(hours > 1) time += 's';
+            time += " ";
         }
         if(minutes != 0) {
-            time += minutes + "minute";
+            time += minutes + " minute";
             if(minutes > 1) time += 's';
+            time += " ";
         }
         if(seconds != 0) {
-            time += seconds + "second";
+            time += seconds + " second";
             if(seconds > 1) time += 's';
         }
         time += ']';
@@ -283,17 +313,17 @@ public class TaskIO {
         if(str.contains("day")) {
             while(Character.isDigit(str.charAt(i))) i++;
             sec += 86400 * Integer.parseInt(str.substring(0, i).trim());
-            str = str.substring(i + 4).trim();
+            str = str.substring(i + 5).trim();
         }
         if(str.contains("hour")) {
             while(Character.isDigit(str.charAt(i))) i++;
             sec += 3600 * Integer.parseInt(str.substring(0, i).trim());
-            str = str.substring(i + 5).trim();
+            str = str.substring(i + 6).trim();
         }
         if(str.contains("minute")) {
             while(Character.isDigit(str.charAt(i))) i++;
             sec += 60 * Integer.parseInt(str.substring(0, i).trim());
-            str = str.substring(i + 7).trim();
+            str = str.substring(i + 8).trim();
         }
         if(str.contains("second")) {
             while(Character.isDigit(str.charAt(i))) i++;
