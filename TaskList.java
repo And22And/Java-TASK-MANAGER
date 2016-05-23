@@ -2,6 +2,7 @@ package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
 
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
@@ -17,10 +18,12 @@ public abstract class TaskList implements Iterable<Task>, Serializable {
 
     public abstract TaskList createEmptyObj();
 
-    public TaskList incoming(Date from, Date to) {
+    public abstract int getIndex(Task task);
+
+    public TaskList incoming(Calendar from, Calendar to) {
         TaskList list = this.createEmptyObj();// if (this instanceOf ArrayTaskList)
         for (int i = 0; i < this.size(); i++) {
-            Date time = this.getTask(i).nextTimeAfter(from);
+            Calendar time = this.getTask(i).nextTimeAfter(from);
             if(time.before(to)) {
                 list.add(this.getTask(i));
             }

@@ -2,13 +2,14 @@ package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
 
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Task implements Serializable{
 
     private String text;
-    private Date start;
-    private Date end;
+    private Calendar start;
+    private Calendar end;
     private int interval;
     private boolean activity;
 
@@ -16,13 +17,13 @@ public class Task implements Serializable{
 
     }
 
-    public Task(String title, Date time) {
+    public Task(String title, Calendar time) {
         if(time == null) throw  new IllegalArgumentException();
         this.setTitle(title);
         this.setTime(time);
     }
 
-    public Task(String title, Date start, Date end, int interval) {
+    public Task(String title, Calendar start, Calendar end, int interval) {
         this.setTitle(title);
         this.setTime(start, end, interval);
     }
@@ -48,12 +49,12 @@ public class Task implements Serializable{
     }
 
 
-    public Date getTime() {
-        return (Date)this.start.clone();
+    public Calendar getTime() {
+        return (Calendar)this.start.clone();
     }
 
 
-    public void setTime(Date time) {
+    public void setTime(Calendar time) {
         if(time == null) throw  new IllegalArgumentException();
         this.interval = 0;
         this.end = time;
@@ -61,13 +62,13 @@ public class Task implements Serializable{
     }
 
 
-    public Date getStartTime() {
-        return (Date)this.start.clone();
+    public Calendar getStartTime() {
+        return (Calendar)this.start.clone();
     }
 
 
-    public Date getEndTime() {
-        return (Date)this.end.clone();
+    public Calendar getEndTime() {
+        return (Calendar)this.end.clone();
     }
 
 
@@ -77,7 +78,7 @@ public class Task implements Serializable{
     }
 
 
-    public void setTime(Date start, Date end, int interval) {
+    public void setTime(Calendar start, Calendar end, int interval) {
         if(start == null || end == null) throw new IllegalArgumentException("Null");
         if(interval < 0 || start.after(end)) throw new IllegalArgumentException("Wrong interwal");
         this.start = start;
@@ -91,12 +92,12 @@ public class Task implements Serializable{
     }
 
 
-    public Date nextTimeAfter(Date current) {
+    public Calendar nextTimeAfter(Calendar current) {
         if( !this.isActive() || !current.before(this.getEndTime()) ) return null;
         if( !this.isRepeated() ) return this.getEndTime();
-        Date next = this.getStartTime();
+        Calendar next = this.getStartTime();
         while(!next.after(current)) {
-            next.setTime(this.getRepeatInterval()*1000 + next.getTime());
+            next.add(Calendar.SECOND, this.getRepeatInterval());
         }
         if( next.after(this.getEndTime()) ) return null;
         return next;
@@ -132,11 +133,11 @@ public class Task implements Serializable{
     @Override
     public Task clone(){
         Task task = new Task();
-        Date start = null, end = null;
+        Calendar start = null, end = null;
         int repeat = 0;
         if(this.start != null && this.end != null) {
-            start = (Date) this.getStartTime().clone();
-            end = (Date) this.getEndTime().clone();
+            start = (Calendar) this.getStartTime().clone();
+            end = (Calendar) this.getEndTime().clone();
         }
         task.setTime(start, end, this.getRepeatInterval());
         task.setActive(this.isActive());

@@ -15,6 +15,14 @@ public class ArrayTaskList extends TaskList{
         return new ArrayTaskList();
     }
 
+    @Override
+    public int getIndex(Task task) {
+        for (int i = 0; i < size(); i++) {
+            if(task.equals(getTask(i))) return i;
+        }
+        return  -1;
+    }
+
     public void add(Task task) {
         if(task == null) throw new IllegalArgumentException();
         Task newtasks[] = new Task[this.size()+1];

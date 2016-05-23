@@ -32,7 +32,7 @@ public class LinkedTaskList extends TaskList {
     public boolean remove(Task task) {
         ListOfTask currTask = this.tasks;
         if(currTask == null) return false;
-        if(currTask.getCurr() == task) {
+        if(currTask.getCurr().equals(task)) {
             if(this.tasks.getNext() == null) this.tasks = null;
             else {
                 this.tasks = this.tasks.getNext();
@@ -41,7 +41,7 @@ public class LinkedTaskList extends TaskList {
             return true;
         }
         while(currTask != null) {
-            if(currTask.getCurr() == task) {
+            if(currTask.getCurr().equals(task)) {
                 if(currTask.getNext() == null) currTask.getPriv().setNext(null);
                 else{currTask.getPriv().setNext(currTask.getNext());}
                 return true;
@@ -68,6 +68,15 @@ public class LinkedTaskList extends TaskList {
             currTask = currTask.getNext();
         }
         return currTask.getCurr();
+    }
+
+    public int getIndex(Task task) {
+        ListOfTask t = this.tasks;
+        for (int i = 0;  i < this.size(); i++) {
+            if(task.equals(t.getCurr())) return i;
+            t = t.getNext();
+        }
+        return -1;
     }
 
     @Override

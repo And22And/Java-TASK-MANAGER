@@ -1,7 +1,9 @@
 package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
 
 import java.io.*;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class TaskIO {
@@ -19,10 +21,10 @@ public class TaskIO {
                 output.writeBoolean(t.isActive());
                 output.writeInt(t.getRepeatInterval());
                 if(t.isRepeated()) {
-                    output.writeLong(t.getStartTime().getTime());
-                    output.writeLong(t.getEndTime().getTime());
+                    output.writeLong(t.getStartTime().getTimeInMillis());
+                    output.writeLong(t.getEndTime().getTimeInMillis());
                 } else {
-                    output.writeLong(t.getStartTime().getTime());
+                    output.writeLong(t.getStartTime().getTimeInMillis());
                 }
 
             }
@@ -41,16 +43,20 @@ public class TaskIO {
     public static void write(TaskList tasks, Writer out) { //– записує задачі зі списку у потік в текстовому    форматі, описаному нижче.
         try {
             SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.mmm]");
+            Date d = new Date();
             for(int i = 0; i < tasks.size(); i++) {
                 Task t = tasks.getTask(i);
                 out.write('\"' + t.getTitle().replace("\"", "\"\"") + '\"');
                 if(t.isRepeated()) {
-                    out.write(" from " + format.format(t.getStartTime()));
-                    out.write(" to " + format.format(t.getEndTime().getTime()));
+                    d.setTime(t.getStartTime().getTimeInMillis());
+                    out.write(" from " + format.format(d));
+                    d.setTime(t.getEndTime().getTimeInMillis());
+                    out.write(" to " + format.format(d));
                     out.write(" every " + intToTime(t.getRepeatInterval()));
                 } else {
                     out.write(" at ");
-                    out.write(format.format(t.getStartTime().getTime()));
+                    d.setTime(t.getStartTime().getTimeInMillis());
+                    out.write(format.format(d));
                 }
                 if(!t.isActive()) out.write(" inactive");
                 if(i != tasks.size()-1) out.write(";\n");
@@ -84,16 +90,16 @@ public class TaskIO {
                 b = input.readBoolean();
                 int rep =input.readInt();
                 if(rep != 0) {
-                    Date d1 = new Date();
-                    d1.setTime(input.readLong());
-                    Date d2 = new Date();
-                    d2.setTime(input.readLong());
+                    Calendar d1 = Calendar.getInstance();
+                    d1.setTimeInMillis(input.readLong());
+                    Calendar d2 = Calendar.getInstance();
+                    d2.setTimeInMillis(input.readLong());
                     Task t = new Task(str, d1, d2, rep);
                     t.setActive(b);
                     tasks.add(t);
                 } else {
-                    Date d = new Date();
-                    d.setTime(input.readLong());
+                    Calendar d = Calendar.getInstance();
+                    d.setTimeInMillis(input.readLong());
                     Task t = new Task(str, d);
                     t.setActive(b);
                     tasks.add(t);
@@ -123,7 +129,8 @@ public class TaskIO {
                 title = title.replace("\"\"", "\"");
                 str = str.substring(str.lastIndexOf('\"'));
                 if(str.contains("at")) {
-                    Date d1 = format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1));
+                    Calendar d1 = Calendar.getInstance();
+                    d1.setTimeInMillis(format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1)).getTime());
                     str = str.substring(str.indexOf(']')+1);
                     Task t = new Task(title, d1);
                     if(!str.contains("inactive")) {
@@ -132,9 +139,12 @@ public class TaskIO {
                     tasks.add(t);
                 }
                 if(str.contains("from")) {
-                    Date d1 = format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1));
+
+                    Calendar d1 = Calendar.getInstance();
+                    d1.setTimeInMillis(format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1)).getTime());
                     str = str.substring(str.indexOf(']')+1);
-                    Date d2 = format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1));
+                    Calendar d2 = Calendar.getInstance();
+                    d2.setTimeInMillis(format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1)).getTime());
                     str = str.substring(str.indexOf(']')+1);
                     Task t = new Task(title, d1, d2, timeToInt(str.substring(str.indexOf('['), str.indexOf(']')+1)));
                     if(!str.contains("inactive")) {
@@ -158,24 +168,6 @@ public class TaskIO {
     public static void writeBinary(TaskList tasks, File file) { //– записує задачі із списку у файл.
         try {
             write(tasks, new FileOutputStream(file));
-            /*Writer output = new OutputStreamWriter(new FileOutputStream(file));
-            output.write(tasks.size());
-            for(int i = 0; i < tasks.size(); i++) {
-                Task t = tasks.getTask(i);
-                output.write(t.getTitle().length());
-                for(int j = 0; j < t.getTitle().length(); j++) {
-                    output.write(t.getTitle().charAt(j));
-                }
-                output.write(t.isActive() ? 1 : 0);
-                output.write(t.getRepeatInterval());
-                if(t.isRepeated()) {
-                    output.write((int)t.getStartTime().getTime());
-                    output.write((int)t.getEndTime().getTime());
-                } else {
-                    output.write((int)t.getStartTime().getTime());
-                }
-                output.flush();
-            }*/
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -184,22 +176,6 @@ public class TaskIO {
     public static void writeText(TaskList tasks, File file) {  //– записує задачі у файл у текстовому форматі
         try{
             write(tasks, new FileWriter(file));
-           /* SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.mmm]");
-            for(int i = 0; i < tasks.size(); i++) {
-                Task t = tasks.getTask(i);
-                out.write('\"' + t.getTitle().replace("\"", "\"\"") + '\"');
-                if(t.isRepeated()) {
-                    out.write(" from " + format.format(t.getStartTime()));
-                    out.write(" to " + format.format(t.getEndTime().getTime()));
-                    out.write(" every " + intToTime(t.getRepeatInterval()));
-                } else {
-                    out.write(format.format(t.getStartTime().getTime()));
-                }
-                if(!t.isActive()) out.write("inactive");
-                if(i != tasks.size()-1) out.write(";\n");
-                else out.write(".");
-                out.flush();
-            }*/
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -207,32 +183,7 @@ public class TaskIO {
 
     public static void readBinary(TaskList tasks, File file) { //– зчитує задачі із файлу у список задач.
         try {
-            DataInputStream input = new DataInputStream(new FileInputStream(file));
-            read(tasks, input);
-            /*int n = input.readInt();
-            for(int i = 0; i < n; i++) {
-                int l = input.readInt();
-                String str = new String();
-                for(int j = 0; j < l; j++) {
-                    str += input.readChar();
-                }
-                boolean b;
-                b = input.readBoolean();
-                int rep =input.readInt();
-                if(rep != 0) {
-                    Date d1 = new Date();
-                    d1.setTime(input.readLong());
-                    Date d2 = new Date();
-                    d2.setTime(input.readLong());
-                    Task t = new Task(str, d1, d2, rep);
-                    tasks.add(t);
-                } else {
-                    Date d = new Date();
-                    d.setTime(input.readLong());
-                    Task t = new Task(str, d);
-                    tasks.add(t);
-                }
-            }*/
+            read(tasks,  new DataInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -241,40 +192,12 @@ public class TaskIO {
     public static void readText(TaskList tasks, File file) { //– зчитує задачі із файлу у текстовому вигляді.
         try {
             read(tasks, new FileReader(file));
-            /*BufferedReader reader = new BufferedReader(new FileReader(file));
-            SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.mmm]");
-            String str;
-            do {
-                str = reader.readLine();
-                String title = str.substring(str.indexOf('\"'), str.lastIndexOf('\"')+1);
-                str = str.substring(str.lastIndexOf('\"'));
-                if(str.contains("at")) {
-                    Date d1 = format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1));
-                    str = str.substring(str.indexOf(']')+1);
-                    Task t = new Task(title, d1);
-                    if(!str.contains("inactive")) {
-                        t.setActive(true);
-                    }
-                    tasks.add(t);
-                }
-                if(str.contains("from")) {
-                    Date d1 = format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1));
-                    str = str.substring(str.indexOf(']')+1);
-                    Date d2 = format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1));
-                    str = str.substring(str.indexOf(']')+1);
-                    Task t = new Task(title, d1, d2, timeToInt(str.substring(str.indexOf('['), str.indexOf(']')+1)));
-                    if(!str.contains("inactive")) {
-                        t.setActive(true);
-                    }
-                    tasks.add(t);
-                }
-            } while(str.charAt(str.length() - 1) != '.');*/
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private static String intToTime(int sec) {
+    public static String intToTime(int sec) {
         String time = "[";
         int seconds = sec;
         int days = seconds/86400;
@@ -306,7 +229,7 @@ public class TaskIO {
         return time;
     }
 
-    private static int timeToInt(String time) {
+    public static int timeToInt(String time) {
         int sec = 0;
         String str = time.substring(1).trim();
         int i = 0;
@@ -331,5 +254,7 @@ public class TaskIO {
         }
         return sec;
     }
+
+
 
 }

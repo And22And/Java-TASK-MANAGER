@@ -1,6 +1,7 @@
 package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
 
 
+import java.util.Calendar;
 import java.util.Date;
 
 public class ArrayTaskList1 {
@@ -49,10 +50,10 @@ public class ArrayTaskList1 {
         return this.tasks[index];
     }
 
-    public ArrayTaskList1 incoming(Date from, Date to) {
+    public ArrayTaskList1 incoming(Calendar from,Calendar to) {
         ArrayTaskList1 list = new ArrayTaskList1();
         for (Task task: this.tasks) {
-            Date time = task.nextTimeAfter(from);
+            Calendar time = task.nextTimeAfter(from);
             if(time != null && time.before(to)) {
                 list.add(task);
             }
