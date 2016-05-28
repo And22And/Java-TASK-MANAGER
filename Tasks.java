@@ -24,23 +24,34 @@ public class Tasks{
         return list;
     }
 
-    public static SortedMap<Date, Set<Task>> calendar(Iterable<Task> tasks, Calendar start, Calendar end) {
-        SortedMap<Date, Set<Task>> map = new TreeMap<Date, Set<Task>>();
+    public static SortedMap<Calendar, Set<Task>> calendar(Iterable<Task> tasks, Calendar start, Calendar end) {
+        SortedMap<Calendar, Set<Task>> map = new TreeMap<Calendar, Set<Task>>();
         Calendar st = (Calendar)start.clone();
         st.setTimeInMillis(st.getTimeInMillis() - 1000);
         for(Task task: tasks) {
             Calendar date;
             date = task.nextTimeAfter(st);
-            while(date != null && !end.before(date)) {
-                if (map.containsKey(date)) {
-                    map.get(date).add(task);
+            if(task.isRepeated()) {
+                while (date != null && !end.before(date)) {
+                    if (map.containsKey(date)) {
+                        map.get(date).add(task);
+                    } else {
+                        HashSet<Task> set = new HashSet<Task>();
+                        set.add(task);
+                        map.put((Calendar) date.clone(), set);
+                    }
+                    date = task.nextTimeAfter(date);
                 }
-                else {
-                    HashSet<Task> set = new HashSet<Task>();
-                    set.add(task);
-                    map.put((Date) date.clone(), set);
+            } else {
+                if(date != null && !end.before(date))  {
+                    if (map.containsKey(date)) {
+                        map.get(date).add(task);
+                    } else {
+                        HashSet<Task> set = new HashSet<Task>();
+                        set.add(task);
+                        map.put((Calendar) date.clone(), set);
+                    }
                 }
-                date.add(Calendar.SECOND, task.getRepeatInterval());
             }
         }
         return map;

@@ -41,7 +41,7 @@ public class TaskIO {
 
     public static void write(TaskList tasks, Writer out) { //– записує задачі зі списку у потік в текстовому    форматі, описаному нижче.
         try {
-            SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.mmm]");
+            SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.SSS]");
             Date d = new Date();
             for(int i = 0; i < tasks.size(); i++) {
                 Task t = tasks.getTask(i);
@@ -120,16 +120,18 @@ public class TaskIO {
     public static void read(TaskList tasks, Reader in) { //  – зчитує задачі із потоку у список.
         try {
             BufferedReader reader = new BufferedReader(in);
-            SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.mmm]");
+            SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.SSS]");
             String str;
             do {
                 str = reader.readLine();
+                System.out.println(str);
                 String title = str.substring(str.indexOf('\"')+1, str.lastIndexOf('\"'));
                 title = title.replace("\"\"", "\"");
                 str = str.substring(str.lastIndexOf('\"'));
                 if(str.contains("at")) {
                     Calendar d1 = Calendar.getInstance();
                     d1.setTimeInMillis(format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1)).getTime());
+                    System.out.println(d1);
                     str = str.substring(str.indexOf(']')+1);
                     Task t = new Task(title, d1);
                     if(!str.contains("inactive")) {
@@ -141,10 +143,14 @@ public class TaskIO {
 
                     Calendar d1 = Calendar.getInstance();
                     d1.setTimeInMillis(format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1)).getTime());
+                    System.out.println(d1);
                     str = str.substring(str.indexOf(']')+1);
+                    System.out.println(str);
                     Calendar d2 = Calendar.getInstance();
                     d2.setTimeInMillis(format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1)).getTime());
+                    System.out.println(d2);
                     str = str.substring(str.indexOf(']')+1);
+                    System.out.println(str);
                     Task t = new Task(title, d1, d2, timeToInt(str.substring(str.indexOf('['), str.indexOf(']')+1)));
                     if(!str.contains("inactive")) {
                         t.setActive(true);

@@ -44,7 +44,7 @@ public class GUIController {
     }
 
     public static String tasksToText(TaskList tasks) {
-        SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.mmm]");
+        SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.SSS]");
         String str = "";
         Date d1 = new Date();
         for(int i = 0; i < tasks.size(); i++) {
@@ -69,8 +69,31 @@ public class GUIController {
         return str;
     }
 
+    public static String taskToText(Task task) {
+        SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.SSS]");
+        String str = "";
+        Date d1 = new Date();
+
+            str += GUIController.getTaskList().getIndex(task) + ". ";
+            str += '\"' + task.getTitle().replace("\"", "\"\"") + '\"';
+            if (task.isRepeated()) {
+                d1.setTime(task.getStartTime().getTimeInMillis());
+                str += " from " + format.format(d1);
+                d1.setTime(task.getEndTime().getTimeInMillis());
+                str += " to " + format.format(d1);
+                str += " every " + TaskIO.intToTime(task.getRepeatInterval());
+            } else {
+                str += " at ";
+                d1.setTime(task.getStartTime().getTimeInMillis());
+                str += format.format(d1);
+            }
+            if (!task.isActive())  str += " inactive";
+        return str;
+    }
+
     public static Task textToTask(String str) {
-        SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.mmm]");
+        SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.SSS]");
+        System.out.println(str);
         String title = str.substring(str.indexOf('\"') + 1, str.lastIndexOf('\"'));
         title = title.replace("\"\"", "\"");
         str = str.substring(str.lastIndexOf('\"'));
@@ -78,6 +101,7 @@ public class GUIController {
             Calendar d1 = Calendar.getInstance();
             try {
                 d1.setTimeInMillis(format.parse(str.substring(str.indexOf('['), str.indexOf(']') + 1)).getTime());
+                System.out.println(d1);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -92,6 +116,7 @@ public class GUIController {
             Calendar d1 = Calendar.getInstance();
             try {
                 d1.setTimeInMillis(format.parse(str.substring(str.indexOf('['), str.indexOf(']') + 1)).getTime());
+                System.out.println(d1);
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -99,6 +124,7 @@ public class GUIController {
             Calendar d2 = Calendar.getInstance();
             try {
                 d2.setTimeInMillis(format.parse(str.substring(str.indexOf('['), str.indexOf(']') + 1)).getTime());
+                System.out.println(d2);
             } catch (ParseException e) {
                 e.printStackTrace();
             }

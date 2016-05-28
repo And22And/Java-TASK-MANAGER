@@ -12,10 +12,30 @@ import java.awt.event.*;
  */
 public class StartGUI {
 
+    static FindGUI findGUI;
+    static WindowWithTasksGUI windowWithTasksGUI;
+
+    public WindowWithTasksGUI getWindowWithTasksGUI() {
+        return windowWithTasksGUI;
+    }
+
+    public void setWindowWithTasksGUI(WindowWithTasksGUI windowWithTasksGUI) {
+        this.windowWithTasksGUI = windowWithTasksGUI;
+    }
+
+    public FindGUI getFindGUI() {
+        return findGUI;
+    }
+
+    public void setFindGUI(FindGUI findGUI) {
+        this.findGUI = findGUI;
+    }
+
     public static void main(String[] args) {
-        final FindGUI findGUI = new FindGUI();
-        findGUI.setGUI("Find", 450, 300);
-        final WindowWithTasksGUI windowWithTasksGUI = new WindowWithTasksGUI();
+        StartGUI taskGUI = new StartGUI();
+        taskGUI.setFindGUI(new FindGUI());
+        taskGUI.getFindGUI().setGUI("Find", 450, 300);
+        taskGUI.setWindowWithTasksGUI(new WindowWithTasksGUI());
 
         TaskIO.readText(GUIController.getTaskList(), GUIController.getF());
         TaskGUI gui = new TaskGUI();
@@ -26,6 +46,7 @@ public class StartGUI {
             }
         };
         gui.getF().addWindowListener(wndCloser);
+
         JButton showDayButton = new JButton("Find Tasks");
         ActionListener actionListener1 = new ActionListener() {
             @Override
@@ -34,6 +55,7 @@ public class StartGUI {
             }
         };
         showDayButton.addActionListener(actionListener1);
+
         JButton showAllButton = new JButton("Show all");
         ActionListener actionListener2 = new ActionListener() {
             @Override
@@ -41,15 +63,23 @@ public class StartGUI {
                 windowWithTasksGUI.windowWithTasks(GUIController.getTasks());
             }
         };
-        showDayButton.addActionListener(actionListener1);
         showAllButton.addActionListener(actionListener2);
+
+        JButton showPlane = new JButton("Show plane");
+        ActionListener actionListener3 = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+               findGUI.findPlaneGUI();
+            }
+        };
+        showPlane.addActionListener(actionListener3);
 
         gui.getP().add(showDayButton, gui.getC());
         gui.getC().gridx = 1;
         gui.getP().add(showAllButton, gui.getC());
-        gui.getC().gridy = 1;
+        gui.getC().gridy++;
         gui.getC().gridx = 0;
-        /////
+        gui.getP().add(showPlane, gui.getC());
         gui.getF().setVisible(true);
     }
 }

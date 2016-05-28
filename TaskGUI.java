@@ -1,12 +1,13 @@
 package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.View;
 
+import sun.java2d.pipe.SpanShapeRenderer;
 import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Controller.GUIController;
 import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Calendar;
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -55,7 +56,7 @@ public class TaskGUI extends GridBagLayout {
         return c;
     }
 
-    public static PlainDocument getPlainDocument(final int l) {
+    public PlainDocument getPlainDocument(final int l) {
         return new PlainDocument() {
             String chars = "0123456789";
             @Override
@@ -69,7 +70,7 @@ public class TaskGUI extends GridBagLayout {
         };
     }
 
-    private static Date getDate(int mounth, int day, int hour, int minutes) {
+    private Date getDate(int mounth, int day, int hour, int minutes) {
         Date date = new Date();
         long a = 31536000;
         a *= 1000;
@@ -81,7 +82,7 @@ public class TaskGUI extends GridBagLayout {
         return date;
     }
 
-    public static int getDaysFromMounth(int month) {
+    public int getDaysFromMounth(int month) {
         int days = 0;
         long a = 31536000;
         a *= 1000;
@@ -124,5 +125,20 @@ public class TaskGUI extends GridBagLayout {
         if(month == 11) return 30;
         if(month == 12) return 31;
         return 0;
+    }
+
+    public String planeToText(SortedMap<Calendar, Set<Task>> plane) {
+        String str = "";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        for(Map.Entry<Calendar, Set<Task>> entry : plane.entrySet()) {
+            Date d = new Date();
+            d.setTime(entry.getKey().getTimeInMillis());
+            str += format.format(d) + "\n";
+            for(Task task : entry.getValue()) {
+                str += "\t" + GUIController.taskToText(task) + "\n";
+            }
+            str += "\n";
+        }
+        return str;
     }
 }
