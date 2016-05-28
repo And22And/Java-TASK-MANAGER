@@ -190,6 +190,7 @@ public class AddGUI extends TaskGUI{
                         t.setTitle(title.getText());
                         t.setTime(d1);
                     }
+                    GUIController.getTaskList().add(t);
                     GUIController.saveTasks();
                     AddGUI.this.tasks.add(t);
                     AddGUI.this.textArea.setText(GUIController.tasksToText(AddGUI.this.tasks));
