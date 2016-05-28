@@ -1,8 +1,9 @@
 package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
 
 
+import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.Task;
+
 import java.util.Calendar;
-import java.util.Date;
 
 public class ArrayTaskList1 {
 

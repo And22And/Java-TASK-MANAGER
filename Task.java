@@ -1,9 +1,8 @@
-package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
+package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model;
 
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
 
 public class Task implements Serializable{
 
@@ -61,6 +60,11 @@ public class Task implements Serializable{
         this.start = time;
     }
 
+    public void setTask(Task task) {
+        setTitle(task.getTitle());
+        setActive(task.isActive());
+        setTime(task.getStartTime(), task.getEndTime(), task.getRepeatInterval());
+    }
 
     public Calendar getStartTime() {
         return (Calendar)this.start.clone();
@@ -103,6 +107,17 @@ public class Task implements Serializable{
         return next;
     }
 
+    public Calendar nextTimeAfter(Calendar current, boolean bool) {
+        if( bool != this.isActive() || !current.before(this.getEndTime()) ) return null;
+        if( !this.isRepeated() ) return this.getEndTime();
+        Calendar next = this.getStartTime();
+        while(!next.after(current)) {
+            next.add(Calendar.SECOND, this.getRepeatInterval());
+        }
+        if( next.after(this.getEndTime()) ) return null;
+        return next;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj == null) return  false;
@@ -112,8 +127,8 @@ public class Task implements Serializable{
         return  this.getTitle().equals(task.getTitle()) &&
                 this.isActive() == task.isActive() &&
                 this.getRepeatInterval() == task.getRepeatInterval() &&
-                this.getStartTime().equals(task.getStartTime()) &&
-                this.getEndTime().equals(task.getEndTime());
+                this.getStartTime().getTimeInMillis() == task.getStartTime().getTimeInMillis() &&
+                this.getEndTime().getTimeInMillis() == task.getEndTime().getTimeInMillis();
     }
 
     public int hashCode() {

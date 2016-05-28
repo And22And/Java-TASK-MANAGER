@@ -1,5 +1,9 @@
-package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
+package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Controller;
 
+import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.*;
+import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.View.TaskGUI;
+
+import javax.swing.*;
 import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,7 +39,7 @@ public class GUIController {
         d2.setTimeInMillis(d2.getTimeInMillis() + seconds);
         LinkedTaskList list = new LinkedTaskList();
         TaskIO.readText(list, f);
-        list = (LinkedTaskList)Tasks.incoming(list, d1, d2);
+        list = (LinkedTaskList) Tasks.incoming(list, d1, d2);
         return list;
     }
 
@@ -106,5 +110,55 @@ public class GUIController {
             return t;
         }
         return null;
+    }
+
+    public static boolean chekField(JTextField year, JTextField mounth, JTextField day, JTextField hour, JTextField minutes, JTextField seconds) {
+        try {
+            if (year.getText().isEmpty() && Integer.parseInt(year.getText()) > 0) return false;
+        } catch (NumberFormatException e) {
+            year.setText("");
+            return false;
+        }
+
+        try {
+            if (mounth.getText().isEmpty() || Integer.parseInt(mounth.getText()) == 0 || Integer.parseInt(mounth.getText()) > 12) {
+                mounth.setText("");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            mounth.setText("");
+            return false;
+        }
+
+        try {
+            if (day.getText().isEmpty() || Integer.parseInt(day.getText()) == 0 || Integer.parseInt(day.getText()) > TaskGUI.getDaysInMonth(Integer.parseInt(mounth.getText()))) {
+                day.setText("");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            mounth.setText("");
+            return false;
+        }
+
+        try {
+            if (hour.getText().isEmpty() || Integer.parseInt(hour.getText()) > 24) {
+                hour.setText("");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+        mounth.setText("");
+        return false;
+        }
+
+        try {
+            if (minutes.getText().isEmpty() || Integer.parseInt(minutes.getText()) > 60) {
+                minutes.setText("");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+        mounth.setText("");
+        return false;
+        }
+        return true;
     }
 }

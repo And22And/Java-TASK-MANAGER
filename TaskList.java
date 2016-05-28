@@ -1,9 +1,8 @@
-package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
+package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model;
 
 
 import java.io.Serializable;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Iterator;
 
 public abstract class TaskList implements Iterable<Task>, Serializable {
@@ -19,6 +18,13 @@ public abstract class TaskList implements Iterable<Task>, Serializable {
     public abstract TaskList createEmptyObj();
 
     public abstract int getIndex(Task task);
+
+    public void add(TaskList tasks) {
+        if(tasks == null) throw new IllegalArgumentException();
+        for(int i = 0; i < tasks.size(); i++) {
+            add(tasks.getTask(i));
+        }
+    }
 
     public TaskList incoming(Calendar from, Calendar to) {
         TaskList list = this.createEmptyObj();// if (this instanceOf ArrayTaskList)

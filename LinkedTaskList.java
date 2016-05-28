@@ -1,4 +1,4 @@
-package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
+package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model;
 
 
 import java.util.Iterator;

@@ -1,7 +1,6 @@
-package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks;
+package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model;
 
 import java.io.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
