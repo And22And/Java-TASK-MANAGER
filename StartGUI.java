@@ -1,16 +1,18 @@
 package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.View;
 
-import sun.awt.WindowClosingListener;
 import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Controller.GUIController;
-import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.TaskIO;
+import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Controller.TaskIO;
 
 import javax.swing.*;
 import java.awt.event.*;
+import org.apache.log4j.Logger;
 
 /**
  * Created by Клиент on 28.05.2016.
  */
 public class StartGUI {
+
+    final private static Logger log = Logger.getLogger(StartGUI.class);
 
     static FindGUI findGUI;
     static WindowWithTasksGUI windowWithTasksGUI;
@@ -32,20 +34,23 @@ public class StartGUI {
     }
 
     public static void main(String[] args) {
-        StartGUI taskGUI = new StartGUI();
+        log.info("Start");
+        NoticeGUI notice = new NoticeGUI();
+        notice.start();
+        final StartGUI taskGUI = new StartGUI();
         taskGUI.setFindGUI(new FindGUI());
-        taskGUI.getFindGUI().setGUI("Find", 450, 300);
-        taskGUI.setWindowWithTasksGUI(new WindowWithTasksGUI());
-
-        TaskIO.readText(GUIController.getTaskList(), GUIController.getF());
-        TaskGUI gui = new TaskGUI();
-        gui.setGUI("Main", 300, 200);
         WindowListener wndCloser = new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
+                log.info("End");
                 System.exit(0);
             }
         };
-        gui.getF().addWindowListener(wndCloser);
+        taskGUI.setFindGUI(new FindGUI());
+        taskGUI.setWindowWithTasksGUI(new WindowWithTasksGUI());
+
+        TaskIO.readText(GUIController.getTaskList(), GUIController.getF());
+        final TaskGUI gui = new TaskGUI();
+        gui.setGUI("Main", 300, 200, wndCloser);
 
         JButton showDayButton = new JButton("Find Tasks");
         ActionListener actionListener1 = new ActionListener() {
@@ -60,7 +65,7 @@ public class StartGUI {
         ActionListener actionListener2 = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                windowWithTasksGUI.windowWithTasks(GUIController.getTasks());
+                windowWithTasksGUI.windowWithTasks(GUIController.getTasks(), gui.getF());
             }
         };
         showAllButton.addActionListener(actionListener2);

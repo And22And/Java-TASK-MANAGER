@@ -2,8 +2,11 @@ package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model;
 
 
 import java.util.Arrays;
+import org.apache.log4j.Logger;
 
 public class ArrayTaskList extends TaskList{
+
+    final private static Logger log = Logger.getLogger(TaskList.class);
 
     private Task tasks[];
 
@@ -24,7 +27,11 @@ public class ArrayTaskList extends TaskList{
     }
 
     public void add(Task task) {
-        if(task == null) throw new IllegalArgumentException();
+        if(task == null) {
+            IllegalArgumentException e = new IllegalArgumentException();
+            log.error(e);
+            throw e;
+        }
         Task newtasks[] = new Task[this.size()+1];
         int i;
         for (i = 0; i < this.size(); i++) {

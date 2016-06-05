@@ -3,8 +3,11 @@ package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model;
 
 import java.io.Serializable;
 import java.util.Calendar;
+import org.apache.log4j.Logger;
 
 public class Task implements Serializable{
+
+    final private static Logger log = Logger.getLogger(Task.class);
 
     private String text;
     private Calendar start;
@@ -17,7 +20,11 @@ public class Task implements Serializable{
     }
 
     public Task(String title, Calendar time) {
-        if(time == null) throw  new IllegalArgumentException();
+        if(time == null) {
+            IllegalArgumentException e = new IllegalArgumentException();
+            log.error(e);
+            throw e;
+        }
         this.setTitle(title);
         this.setTime(time);
     }
@@ -54,7 +61,11 @@ public class Task implements Serializable{
 
 
     public void setTime(Calendar time) {
-        if(time == null) throw  new IllegalArgumentException();
+        if(time == null) {
+            IllegalArgumentException e = new IllegalArgumentException();
+            log.error(e);
+            throw e;
+        }
         this.interval = 0;
         this.end = time;
         this.start = time;
@@ -83,8 +94,16 @@ public class Task implements Serializable{
 
 
     public void setTime(Calendar start, Calendar end, int interval) {
-        if(start == null || end == null) throw new IllegalArgumentException("Null");
-        if(interval < 0 || start.after(end)) throw new IllegalArgumentException("Wrong interwal");
+        if(start == null || end == null) {
+            IllegalArgumentException e = new IllegalArgumentException();
+            log.error(e);
+            throw e;
+        }
+        if(interval < 0 || start.after(end)) {
+            IllegalArgumentException e = new IllegalArgumentException();
+            log.error(e);
+            throw e;
+        }
         this.start = start;
         this.end = end;
         this.interval = interval;
@@ -149,7 +168,6 @@ public class Task implements Serializable{
     public Task clone(){
         Task task = new Task();
         Calendar start = null, end = null;
-        int repeat = 0;
         if(this.start != null && this.end != null) {
             start = (Calendar) this.getStartTime().clone();
             end = (Calendar) this.getEndTime().clone();

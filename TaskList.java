@@ -4,8 +4,11 @@ package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.logging.Logger;
 
 public abstract class TaskList implements Iterable<Task>, Serializable {
+
+    final private static Logger log = Logger.getLogger("TaskList.class");
 
     public abstract void add(Task task);
 
@@ -15,9 +18,9 @@ public abstract class TaskList implements Iterable<Task>, Serializable {
 
     public abstract Task getTask(int index);
 
-    public abstract TaskList createEmptyObj();
-
     public abstract int getIndex(Task task);
+
+    public abstract TaskList createEmptyObj();
 
     public void add(TaskList tasks) {
         if(tasks == null) throw new IllegalArgumentException();

@@ -1,6 +1,6 @@
 package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.View;
 
-import sun.java2d.pipe.SpanShapeRenderer;
+
 import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Controller.GUIController;
 import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.*;
 
@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -39,6 +40,22 @@ public class TaskGUI extends GridBagLayout {
                 this.windowClosed(e);
             }
         };
+        this.f.addWindowListener(wndCloser);
+        this.f.getContentPane().add(p);
+        this.f.setSize(x, y);
+    }
+
+    public void setGUI(String title, int x, int y, WindowListener wndCloser) {
+        this.f = new JFrame();
+        this.getF().setTitle(title);
+        this.p = new JPanel();
+        this.p.setLayout(new GridBagLayout());
+        this.c = new GridBagConstraints();
+        this.c.gridx = 0;
+        this.c.gridy = 0;
+        this.c.insets = new Insets(2, 2, 2, 2);
+        this.c.weightx = 1.0;
+        this.c.weighty = 1.0;
         this.f.addWindowListener(wndCloser);
         this.f.getContentPane().add(p);
         this.f.setSize(x, y);

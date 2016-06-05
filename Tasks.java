@@ -1,10 +1,14 @@
-package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model;
+package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Controller;
+
+import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.LinkedTaskList;
+import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.Task;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class Tasks{
 
-  public static Iterable<Task> incoming(Iterable<Task> tasks, Calendar start, Calendar end){
+    public static Iterable<Task> incoming(Iterable<Task> tasks, Calendar start, Calendar end){
         LinkedTaskList list = new LinkedTaskList();
         for(Task t: tasks) {
             if(t.nextTimeAfter(start) != null && !end.before(t.nextTimeAfter(start))) {

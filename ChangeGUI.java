@@ -5,13 +5,19 @@ import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.Task;
 import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.TaskList;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Calendar;
+import java.util.logging.Logger;
 
 /**
  * Created by Клиент on 28.05.2016.
  */
 public class ChangeGUI extends TaskGUI {
+
+    final private static Logger log = Logger.getLogger("ChangeGUI.class");
 
     private TaskGUI gui;
     private JTextArea textArea;
@@ -39,9 +45,9 @@ public class ChangeGUI extends TaskGUI {
         this.gui = new TaskGUI();
         this.gui.setGUI("Change", 450, 400);
         this.tasks = tasks;
-        this.task = tasks.getTask(this.tasks.getIndex(t));
+        this.task = t;
         this.textArea = textArea;
-        this.changedTask = t;
+        this.changedTask = t.clone();
 
         JLabel titleText = new JLabel("Title");
         this.gui.getC().gridx = 0;
@@ -72,7 +78,7 @@ public class ChangeGUI extends TaskGUI {
         this.gui.getC().gridx = 1;
         this.gui.getP().add(this.mounth, this.gui.getC());
         this.mounth1 = new JTextField((this.task.getEndTime().get(Calendar.MONTH)+1)+"", 2);
-       // this.mounth1.setDocument(getPlainDocument(2));
+        // this.mounth1.setDocument(getPlainDocument(2));
         this.gui.getC().gridx = 2;
         this.gui.getP().add(this.mounth1, this.gui.getC());
 
@@ -203,8 +209,6 @@ public class ChangeGUI extends TaskGUI {
                         d2.set(Calendar.SECOND, Integer.parseInt(ChangeGUI.this.second1.getText()));
                         d2.set(Calendar.MILLISECOND, 0);
                         d2.setTimeInMillis(d2.getTimeInMillis());
-                        System.out.println(d2);
-                        d2.set(Calendar.SECOND, Integer.parseInt(ChangeGUI.this.second1.getText()));
                         ChangeGUI.this.task.setActive(active.isSelected());
                         ChangeGUI.this.task.setTitle(title.getText());
                         ChangeGUI.this.task.setTime(d1, d2, Integer.parseInt(interval.getText()));
@@ -215,6 +219,7 @@ public class ChangeGUI extends TaskGUI {
                     }
                     GUIController.getTaskList().getTask( GUIController.getTaskList().getIndex(ChangeGUI.this.changedTask)).setTask(ChangeGUI.this.task);
                     GUIController.saveTasks();
+                    ChangeGUI.this.tasks.getTask(  ChangeGUI.this.tasks.getIndex(ChangeGUI.this.changedTask)).setTask(ChangeGUI.this.task);
                     ChangeGUI.this.gui.getF().setVisible(false);
                     ChangeGUI.this.textArea.setText(GUIController.tasksToText(ChangeGUI.this.tasks));
                 }

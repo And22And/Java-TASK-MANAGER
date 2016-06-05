@@ -2,22 +2,26 @@ package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.View;
 
 import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Controller.GUIController;
 import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.LinkedTaskList;
-import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.Tasks;
+import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Controller.Tasks;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.Calendar;
 
 /**
  * Created by Клиент on 28.05.2016.
  */
-public class FindGUI extends TaskGUI
+public class FindGUI extends TaskGUI {
 
-{
+
     public void findTaskGUI() {
-        final TaskGUI gui = new TaskGUI();
-        gui.setGUI("Find", 450, 400);
+        TaskGUI gui = new FindGUI();
+        WindowListener wndCloser = new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                this.windowClosed(e);
+            }
+        };
+        gui.setGUI("Find", 450, 400, wndCloser);
 
         JLabel yearText = new JLabel("Year");
         gui.getC().gridx = 0;
@@ -129,7 +133,7 @@ public class FindGUI extends TaskGUI
                         list.add((LinkedTaskList) Tasks.incoming(GUIController.getTaskList(), c1, c2, true));
                     if (active1.isSelected())
                         list.add((LinkedTaskList) Tasks.incoming(GUIController.getTaskList(), c1, c2, false));
-                    windowWithTasksGUI.windowWithTasks(list);
+                    windowWithTasksGUI.windowWithTasks(list, getF());
                 }
             }
         });

@@ -7,8 +7,11 @@ import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.TaskList;
 import javax.swing.*;
 import java.awt.event.*;
 import java.util.Calendar;
+import org.apache.log4j.Logger;
 
 public class AddGUI extends TaskGUI{
+
+    final private static Logger log = Logger.getLogger(AddGUI.class);
 
     private TaskGUI gui;
     private JTextArea textArea;
@@ -170,6 +173,7 @@ public class AddGUI extends TaskGUI{
                     Calendar d1 = Calendar.getInstance();
                     d1.set(Integer.parseInt(AddGUI.this.year.getText()), Integer.parseInt(AddGUI.this.mounth.getText()) - 1, Integer.parseInt(AddGUI.this.day.getText()), Integer.parseInt(AddGUI.this.hour.getText()), Integer.parseInt(AddGUI.this.minutes.getText()));
                     d1.set(Calendar.SECOND, Integer.parseInt(AddGUI.this.second.getText()));
+                    d1.set(Calendar.MILLISECOND, 0);
                     if (box.isSelected()) {
                         Calendar d2 = Calendar.getInstance();
                         d2.set(Calendar.YEAR, Integer.parseInt(AddGUI.this.year1.getText()));
@@ -182,14 +186,12 @@ public class AddGUI extends TaskGUI{
                         d2.setTimeInMillis(d2.getTimeInMillis());
                         System.out.println(d2);
                         d2.set(Calendar.SECOND, Integer.parseInt(AddGUI.this.second1.getText()));
-                        t.setActive(AddGUI.this.active.isSelected());
-                        t.setTitle(AddGUI.this.title.getText());
-                        t.setTime(d1, d2, Integer.parseInt(interval.getText()));
+                        t.setTime(d1, d2, Integer.parseInt(interval1.getText()));
                     } else {
-                        t.setActive(active.isSelected());
-                        t.setTitle(title.getText());
                         t.setTime(d1);
                     }
+                    t.setActive(active.isSelected());
+                    t.setTitle(title.getText());
                     GUIController.getTaskList().add(t);
                     GUIController.saveTasks();
                     AddGUI.this.tasks.add(t);

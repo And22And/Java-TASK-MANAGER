@@ -1,11 +1,18 @@
-package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model;
+package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Controller;
+
+import org.apache.log4j.Logger;
+import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.Task;
+import ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model.TaskList;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+
 public class TaskIO {
+
+    final private static Logger log = Logger.getLogger(TaskIO.class);
 
     public static void write(TaskList tasks, OutputStream out) { //– записує задачі із списку у потік у бінарному форматі, описаному нижче.
         try {
@@ -29,12 +36,14 @@ public class TaskIO {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            log.error(e);
         }
         finally {
             try {
                 out.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                log.error(e);
             }
         }
     }
@@ -64,12 +73,14 @@ public class TaskIO {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            log.error(e);
         }
         finally {
             try {
                 out.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                log.error(e);
             }
         }
     }
@@ -107,12 +118,14 @@ public class TaskIO {
             }
         } catch (IOException e) {
             e.printStackTrace();
+            log.error(e);
         }
         finally {
             try {
                 in.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                log.error(e);
             }
         }
     }
@@ -121,17 +134,14 @@ public class TaskIO {
         try {
             BufferedReader reader = new BufferedReader(in);
             SimpleDateFormat format = new SimpleDateFormat("[yyyy-MM-dd hh:mm:ss.SSS]");
-            String str;
-            do {
-                str = reader.readLine();
-                System.out.println(str);
+            String str = reader.readLine();
+            while(str != null && !str.isEmpty()) {
                 String title = str.substring(str.indexOf('\"')+1, str.lastIndexOf('\"'));
                 title = title.replace("\"\"", "\"");
                 str = str.substring(str.lastIndexOf('\"'));
                 if(str.contains("at")) {
                     Calendar d1 = Calendar.getInstance();
                     d1.setTimeInMillis(format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1)).getTime());
-                    System.out.println(d1);
                     str = str.substring(str.indexOf(']')+1);
                     Task t = new Task(title, d1);
                     if(!str.contains("inactive")) {
@@ -140,32 +150,30 @@ public class TaskIO {
                     tasks.add(t);
                 }
                 if(str.contains("from")) {
-
                     Calendar d1 = Calendar.getInstance();
                     d1.setTimeInMillis(format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1)).getTime());
-                    System.out.println(d1);
                     str = str.substring(str.indexOf(']')+1);
-                    System.out.println(str);
                     Calendar d2 = Calendar.getInstance();
                     d2.setTimeInMillis(format.parse(str.substring(str.indexOf('['), str.indexOf(']')+1)).getTime());
-                    System.out.println(d2);
                     str = str.substring(str.indexOf(']')+1);
-                    System.out.println(str);
                     Task t = new Task(title, d1, d2, timeToInt(str.substring(str.indexOf('['), str.indexOf(']')+1)));
                     if(!str.contains("inactive")) {
                         t.setActive(true);
                     }
                     tasks.add(t);
                 }
-            } while(str.charAt(str.length() - 1) != '.');
+                str = reader.readLine();
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e);
         }
         finally {
             try {
                 in.close();
             } catch (IOException e) {
                 e.printStackTrace();
+                log.error(e);
             }
         }
     }
@@ -175,6 +183,7 @@ public class TaskIO {
             write(tasks, new FileOutputStream(file));
         } catch (IOException e) {
             e.printStackTrace();
+            log.error(e);
         }
     }
 
@@ -183,6 +192,7 @@ public class TaskIO {
             write(tasks, new FileWriter(file));
         } catch (IOException e) {
             e.printStackTrace();
+            log.error(e);
         }
     }
 
@@ -191,14 +201,26 @@ public class TaskIO {
             read(tasks,  new DataInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             e.printStackTrace();
+            log.error(e);
         }
     }
 
     public static void readText(TaskList tasks, File file) { //– зчитує задачі із файлу у текстовому вигляді.
         try {
             read(tasks, new FileReader(file));
-        } catch (Exception e) {
+        }
+        catch (FileNotFoundException e) {
+            log.info("Text.txt not find. Create");
+            try {
+                file.createNewFile();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+                log.error(e1);
+            }
+        }
+        catch (Exception e) {
             e.printStackTrace();
+            log.error(e);
         }
     }
 

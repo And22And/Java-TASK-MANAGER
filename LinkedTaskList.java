@@ -2,8 +2,11 @@ package ua.edu.sumdu.j2se.AndriySliahetskiy.tasks.Model;
 
 
 import java.util.Iterator;
+import org.apache.log4j.Logger;
 
 public class LinkedTaskList extends TaskList {
+
+    final private static Logger log = Logger.getLogger(LinkedTaskList.class);
 
     private ListOfTask tasks;
 
@@ -16,7 +19,11 @@ public class LinkedTaskList extends TaskList {
     }
 
     public void add(Task task) {
-        if(task == null) throw new IllegalArgumentException();
+        if(task == null) {
+            IllegalArgumentException e = new IllegalArgumentException();
+            log.error(e);
+            throw e;
+        }
         if(this.tasks == null) {
             this.tasks = new ListOfTask(task);
         }
@@ -62,7 +69,11 @@ public class LinkedTaskList extends TaskList {
     }
 
     public Task getTask(int index) {
-        if(index >= this.size() || index<0) throw new IllegalArgumentException();
+        if(index >= this.size() || index<0) {
+            IllegalArgumentException e = new IllegalArgumentException();
+            log.error(e);
+            throw e;
+        }
         ListOfTask currTask = this.tasks;
         for (int i = 0; i < index; i++) {
             currTask = currTask.getNext();

@@ -12,16 +12,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 import java.util.SortedMap;
+import java.util.logging.Logger;
 
 /**
  * Created by Клиент on 28.05.2016.
  */
 public class PlaneGUI extends TaskGUI{
 
+    final private static Logger log = Logger.getLogger("PlaneGUI.class");
+
     private JTextArea textArea;
     private TaskList tasks;
 
     public void planeGUI(SortedMap<Calendar, Set<Task>> plane){
+
         TaskGUI gui = new TaskGUI();
         gui.setGUI("Tasks", 600, 600);
 

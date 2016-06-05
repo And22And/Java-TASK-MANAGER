@@ -9,14 +9,22 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.logging.Logger;
 
 public class GUIController {
 
-    private static File f = new File("E:\\Program\\Java\\JavaPractice\\src\\ua\\edu\\sumdu\\j2se\\AndriySliahetskiy\\tasks\\Text.txt");
+    final private static Logger log = Logger.getLogger("GUIController.class");
+
+    private static File f = new File(new File("").getAbsolutePath() + "\\Text.txt");
+
     private  static TaskList taskList = new LinkedTaskList();
 
     public static File getF() {
         return f;
+    }
+
+    public static void setF(File f) {
+        GUIController.f = f;
     }
 
     public static TaskList getTaskList() {
