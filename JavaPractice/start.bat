@@ -1,0 +1,1 @@
+java -jar target/TaskManeger-1.0-SNAPSHOT.jar
